@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5c93099b-557a-43f4-b026-de4a24737c21" >
+		<http:listener-connection host="0.0.0.0" port="8080" />
+	</http:listener-config>
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="86d9469d-0d0b-4afa-91dd-fc16d8b626ae" >
+		<email:smtp-connection host="smtp.gmail.com" port="587" user="pravallika.surapureddy@gmail.com" password="7382310912" >
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<flow name="parse_TemplateFlow" doc:id="bb0943ad-a26a-4e0e-9f8f-a256792e8c71" >
+		<http:listener doc:name="Listener" doc:id="b65c0936-1abe-4a8d-8ea2-fab76653c975" config-ref="HTTP_Listener_config" path="/attachement"/>
+		<file:read doc:name="Read" doc:id="6ba18444-772c-4be7-9ebb-3f4108dd35b5" path="F:\MuleSoft\Target\Input\data.json"/>
+		<email:send doc:name="Send" doc:id="9f3d2575-b22f-4444-83a5-9c2ad398fe3e" config-ref="Email_SMTP" fromAddress="pravallika.surapureddy@gmail.com" subject="Welcome to new world">
+			<email:to-addresses >
+				<email:to-address value="pravallika.venky8@gmail.com" />
+			</email:to-addresses>
+			<email:attachments ><![CDATA[#[{
+	"attachments.txt":payload
+}]]]></email:attachments>
+		</email:send>
+	</flow>
+</mule>
